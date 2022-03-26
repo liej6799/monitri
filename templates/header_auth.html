@@ -1,0 +1,23 @@
+<ul >
+    <li>
+        <a href="/">Home</a>
+    </li>
+    <li>
+        <a href="/header_auth">Change Header Auth</a>
+    </li>
+</ul>
+<hr>
+{% extends 'base.html' %}
+
+{% block title %}Registration Form{% endblock %}
+
+{% block content %}
+    <form method="POST">
+    {{ form.csrf_token }}
+    {{ form.headers_auth.label }}
+    <p>
+        {{ form.headers_auth(size=60) }}
+    </p>
+    <input type="submit" value="Submit">
+    </form>
+{% endblock %}
