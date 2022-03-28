@@ -6,8 +6,26 @@
 {% block content %}
     <h1>Welcome to monitri!</h1>
 
+    <hr>
     <div>
-        <p>api is configured</p>
-        <a href="/header_auth">click here to change</a>
+        <b>headers auth's configuration</b>
+        {% if is_api_configured and is_api_valid%}
+            <p style="color:green">headers auth is configured and valid</p>
+        {% elif not is_api_configured  %}
+            <p style="color:red">headers auth is not configured</p>
+        {% elif not is_api_valid  %}
+            <p style="color:orange">headers auth is no longer valid</p>
+        {% endif %}
+        
+        <a href="/header_auth">click here to update</a>
     </div>
+    <hr>
+    <div>
+        <b>jobs status</b>
+        <p>transaction sync jobs : <span style="color:green">OK<span></p>
+        <p>last update: 25/02/2022 12:12:34</p>
+        <p>balance sync jobs : <span style="color:red">Failed<span></p>
+        <p>last update: 25/02/2022 12:12:34</p>
+    </div>
+    
 {% endblock %}

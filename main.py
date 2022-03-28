@@ -1,20 +1,33 @@
 from flask import Flask, render_template, request, redirect, url_for
-import sqlite3
 from flask_wtf import Form
 from wtforms.validators import InputRequired
 from wtforms import TextAreaField
 from maeapi.maeapi import MAE  # noqa: E402
-import os
-from datetime import date
-import traceback
 from models.header_auth_model import HeaderAuthModel
 from peewee import *
 
 app = Flask(__name__)
 
 @app.route("/")
-def hello_world():
-    return render_template('index.html')
+def index():
+
+    is_api_configured = False
+    is_api_valid = False
+    
+    try:
+        key = HeaderAuthModel.get(HeaderAuthModel.status == True).key
+        try:
+            MAE(key)
+            is_api_valid = True
+        except:
+            is_api_valid = False
+        is_api_configured = True
+    except DoesNotExist:
+        is_api_configured = False
+
+
+    return render_template('index.html', is_api_configured = is_api_configured,
+    is_api_valid = is_api_valid)
 
 
 # More powerful approach using WTForms
@@ -36,8 +49,7 @@ def header_auth():
                 auth.save()
             except IntegrityError:
                 error = "Cannot store multiple similar headers auth."
-            except Exception:
-                error = "Wrong Headers Auth provided."
+                return redirect("/")
         except:
             error = "Wrong Headers Auth provided."
     return render_template('header_auth.html', form=form, message=error)
